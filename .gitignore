@@ -4,3 +4,6 @@
 *.opensdf
 game/*/Release_swarm/*
 game/*/Debug_swarm/*
+game/*/Release/*
+game/*/Debug/*
+game/ipch/*
