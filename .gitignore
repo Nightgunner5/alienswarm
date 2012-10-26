@@ -2,3 +2,5 @@
 *.sdf
 *.suo
 *.opensdf
+game/*/Release_swarm/*
+game/*/Debug_swarm/*
