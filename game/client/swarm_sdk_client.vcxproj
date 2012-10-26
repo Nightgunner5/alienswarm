@@ -889,7 +889,6 @@ exit 1
     <ClCompile Include="swarm\c_asw_game_resource.cpp" />
     <ClCompile Include="swarm\c_asw_generic_emitter.cpp" />
     <ClCompile Include="swarm\c_asw_generic_emitter_entity.cpp" />
-    <ClCompile Include="swarm\c_asw_grub.cpp" />
     <ClCompile Include="swarm\c_asw_gun_smoke_emitter.cpp" />
     <ClCompile Include="swarm\c_asw_hack.cpp" />
     <ClCompile Include="swarm\c_asw_hack_computer.cpp" />
@@ -1916,7 +1915,6 @@ exit 1
     <ClInclude Include="swarm\c_asw_game_resource.h" />
     <ClInclude Include="swarm\c_asw_generic_emitter.h" />
     <ClInclude Include="swarm\c_asw_generic_emitter_entity.h" />
-    <ClInclude Include="swarm\c_asw_grub.h" />
     <ClInclude Include="swarm\c_asw_gun_smoke_emitter.h" />
     <ClInclude Include="swarm\c_asw_hack.h" />
     <ClInclude Include="swarm\c_asw_hack_computer.h" />

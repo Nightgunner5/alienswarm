@@ -105,7 +105,8 @@ if ERRORLEVEL 1 exit 1
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(IntDir)$(TargetName).map</MapFileName>
       <SubSystem>Windows</SubSystem>
-      <BaseAddress> </BaseAddress>
+      <BaseAddress>
+      </BaseAddress>
       <TargetMachine>MachineX86</TargetMachine>
       <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
     </Link>
@@ -197,7 +198,8 @@ if ERRORLEVEL 1 exit 1
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <BaseAddress> </BaseAddress>
+      <BaseAddress>
+      </BaseAddress>
       <TargetMachine>MachineX86</TargetMachine>
       <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
     </Link>
@@ -924,7 +926,6 @@ exit 1
     <ClCompile Include="swarm\asw_grenade_freeze.cpp" />
     <ClCompile Include="swarm\asw_grenade_prifle.cpp" />
     <ClCompile Include="swarm\asw_grenade_vindicator.cpp" />
-    <ClCompile Include="swarm\asw_grub.cpp" />
     <ClCompile Include="swarm\asw_hack.cpp" />
     <ClCompile Include="swarm\asw_hack_computer.cpp" />
     <ClCompile Include="swarm\asw_hack_wire_tile.cpp" />
@@ -1513,7 +1514,6 @@ exit 1
     <ClInclude Include="swarm\asw_grenade_freeze.h" />
     <ClInclude Include="swarm\asw_grenade_prifle.h" />
     <ClInclude Include="swarm\asw_grenade_vindicator.h" />
-    <ClInclude Include="swarm\asw_grub.h" />
     <ClInclude Include="swarm\asw_hack.h" />
     <ClInclude Include="swarm\asw_hack_computer.h" />
     <ClInclude Include="swarm\asw_hack_wire_tile.h" />

@@ -1670,9 +1670,6 @@
     <ClCompile Include="swarm\asw_grenade_vindicator.cpp">
       <Filter>Source Files\Swarm</Filter>
     </ClCompile>
-    <ClCompile Include="swarm\asw_grub.cpp">
-      <Filter>Source Files\Swarm</Filter>
-    </ClCompile>
     <ClCompile Include="swarm\asw_hack.cpp">
       <Filter>Source Files\Swarm</Filter>
     </ClCompile>
@@ -3431,9 +3428,6 @@
       <Filter>Source Files\Swarm</Filter>
     </ClInclude>
     <ClInclude Include="swarm\asw_grenade_vindicator.h">
-      <Filter>Source Files\Swarm</Filter>
-    </ClInclude>
-    <ClInclude Include="swarm\asw_grub.h">
       <Filter>Source Files\Swarm</Filter>
     </ClInclude>
     <ClInclude Include="swarm\asw_hack.h">

@@ -1553,9 +1553,6 @@
     <ClCompile Include="swarm\c_asw_generic_emitter_entity.cpp">
       <Filter>Source Files\Swarm</Filter>
     </ClCompile>
-    <ClCompile Include="swarm\c_asw_grub.cpp">
-      <Filter>Source Files\Swarm</Filter>
-    </ClCompile>
     <ClCompile Include="swarm\c_asw_gun_smoke_emitter.cpp">
       <Filter>Source Files\Swarm</Filter>
     </ClCompile>
@@ -3068,9 +3065,6 @@
       <Filter>Source Files\Swarm</Filter>
     </ClInclude>
     <ClInclude Include="swarm\c_asw_generic_emitter_entity.h">
-      <Filter>Source Files\Swarm</Filter>
-    </ClInclude>
-    <ClInclude Include="swarm\c_asw_grub.h">
       <Filter>Source Files\Swarm</Filter>
     </ClInclude>
     <ClInclude Include="swarm\c_asw_gun_smoke_emitter.h">
