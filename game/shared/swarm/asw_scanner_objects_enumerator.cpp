@@ -19,8 +19,7 @@
 	#include "ai_basenpc.h"
 	#include "asw_alien.h"
 	#include "asw_buzzer.h"
-	#include "asw_door.h"	
-	#include "asw_grub.h"
+	#include "asw_door.h"
 	#include "asw_computer_area.h"
 	#include "asw_button_area.h"
 #endif
@@ -32,10 +31,6 @@ namespace
 {
 	bool ValidScannerObject(CBaseEntity *pEnt)
 	{
-		// dron't show grubs, they're too small
-		CASW_Grub *pGrub = dynamic_cast<CASW_Grub*>(pEnt);
-		if (pGrub)
-			return false;
 		CASW_Alien *pAlien = dynamic_cast<CASW_Alien*>(pEnt);
 		if (pAlien)
 			return pAlien->GetHealth() > 0;
