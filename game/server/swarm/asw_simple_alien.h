@@ -155,6 +155,11 @@ public:
 	virtual void DrawDebugGeometryOverlays();
 
 	bool m_bHoldoutAlien;
+
+	// Outputs
+	COutputEvent m_OnDeath;
+	COutputEvent m_OnDamaged;
+	COutputEvent m_OnIgnite;
 };
 
 enum {

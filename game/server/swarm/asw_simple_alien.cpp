@@ -45,6 +45,10 @@ BEGIN_DATADESC( CASW_Simple_Alien )
 	DEFINE_FIELD(m_fArrivedTolerance, FIELD_FLOAT),
 	DEFINE_FIELD(m_bAttacking, FIELD_BOOLEAN),
 	DEFINE_FIELD( m_bHoldoutAlien, FIELD_BOOLEAN ),
+
+	DEFINE_OUTPUT(m_OnDeath, "OnDeath"),
+	DEFINE_OUTPUT(m_OnDamaged, "OnDamaged"),
+	DEFINE_OUTPUT(m_OnIgnite, "OnIgnite"),
 END_DATADESC()
 
 IMPLEMENT_SERVERCLASS_ST(CASW_Simple_Alien, DT_ASW_Simple_Alien)
@@ -929,6 +933,7 @@ int CASW_Simple_Alien::OnTakeDamage( const CTakeDamageInfo &info )
 	if (iDamage > 0 && GetHealth() > 0)
 	{
 		PainSound(info);
+		m_OnDamaged.FireOutput(info.GetAttacker(), this);
 	}
 
 	return iDamage;
@@ -1201,6 +1206,8 @@ void CASW_Simple_Alien::Event_Killed( const CTakeDamageInfo &info )
 
 	// todo: Select a death pose to extrapolate the ragdoll's velocity?
 	//SelectDeathPose( info );
+
+	m_OnDeath.FireOutput(info.GetAttacker(), this);
 
 	if (!ShouldGib(info))
 	{
