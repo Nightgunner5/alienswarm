@@ -31,10 +31,10 @@
 
 // @TODO: Nuke all of the switches for VBSP1 vs VBSP2 and old mission system vs new mission system.  Move level generation to the background thread.
 
+#ifdef SUPPORT_VBSP_2
 static ConVar asw_vbsp2( "asw_vbsp2", "0", FCVAR_REPLICATED ); // 0 = Use default map builder (VBSP.EXE), 1 = Use new, experimental level builder (VBSP2LIB.LIB)
+#endif
 static ConVar tilegen_retry_count( "tilegen_retry_count", "20", FCVAR_CHEAT, "The number of level generation retries to attempt after which tilegen will give up." );
-ConVar asw_regular_floor_texture( "asw_regular_floor_texture", "REGULAR_FLOOR", FCVAR_NONE, "Regular floor texture to replace" );
-ConVar asw_alien_floor_texture( "asw_alien_floor_texture", "ALIEN_FLOOR", FCVAR_NONE, "Alien floor texture used for replacement" );
 
 DEFINE_LOGGING_CHANNEL_NO_TAGS( LOG_TilegenGeneral, "TilegenGeneral" );
 
@@ -245,10 +245,12 @@ void CASW_Map_Builder::Update( float flEngineTime )
 			BuildMap();
 		}
 	}
+#ifdef SUPPORT_VBSP_2
 	else if ( m_iBuildStage == STAGE_VBSP2 )
 	{
 		UpdateVBSP2Progress();
 	}
+#endif
 	else if ( m_iBuildStage == STAGE_GENERATE )
 	{
 		if ( m_flStartProcessingTime < flEngineTime )
@@ -624,7 +626,8 @@ void CASW_Map_Builder::BuildMap()
 		m_pBuildingMapLayout = NULL;
 	}
 	
-	if ( asw_vbsp2.GetInt() )
+#ifdef SUPPORT_VBSP_2
+	if ( asw_vbsp2.GetBool() )
 	{
 		m_iBuildStage = STAGE_VBSP2;
 		m_nVBSP2Progress = 0;
@@ -636,6 +639,7 @@ void CASW_Map_Builder::BuildMap()
 		m_pWorkerThread->CallWorker( MBC_PROCESS_MAP, 0 );
 	}
 	else
+#endif
 	{
 		// Building map layout is ignored in VBSP1 codepath
 		delete m_pBuildingMapLayout;
@@ -653,6 +657,7 @@ void CASW_Map_Builder::BuildMap()
 	}
 }
 
+#ifdef SUPPORT_VBSP_2
 void CASW_Map_Builder::UpdateVBSP2Progress()
 {
 	// Make sure any reads/writes are committed before reading progress from the background thread.
@@ -678,10 +683,8 @@ void CASW_Map_Builder::UpdateVBSP2Progress()
 	}
 }
 
-
 static CUniformRandomStream s_Random;
 
-#ifdef SUPPORT_VBSP_2
 static void AddFuncInstance( CSimpleMapFile *pInstanceMapFile, CInstanceSpawn *pInstanceSpawn, const Vector &vPosition )
 {
 	CUtlVector< MapEntityKeyValuePair_t > replacePairs;

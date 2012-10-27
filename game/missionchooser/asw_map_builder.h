@@ -22,13 +22,15 @@ enum MapBuildStage
 	STAGE_VBSP, // executing VBSP.EXE (.VMF -> .BSP)
 	STAGE_VVIS, // executing VVIS.EXE on .BSP 
 	STAGE_VRAD, // executing VRAD.EXE on .BSP
-	
+
+#ifdef SUPPORT_VBSP_2
 	// VBSP2 states
 	STAGE_VBSP2, // converts .VMF -> .BSP with vis information
+#endif
 };
 
 static const int MAP_BUILD_OUTPUT_BUFFER_SIZE = 4096;
-static const int MAP_BUILD_OUTPUT_BUFFER_HALF_SIZE = 2048;
+static const int MAP_BUILD_OUTPUT_BUFFER_HALF_SIZE = MAP_BUILD_OUTPUT_BUFFER_SIZE / 2;
 
 // this class manages generation and compilation of maps
 class CASW_Map_Builder : public IASW_Map_Builder
@@ -54,9 +56,11 @@ public:
 	bool IsBuildingMission();
 	CMapLayout *GetCurrentlyBuildingMapLayout() const { return m_pBuildingMapLayout; }
 	
+#ifdef SUPPORT_VBSP_2
 	// A value that ranges from 0 to 100 indicating percentage of map progress complete
 	CInterlockedInt m_nVBSP2Progress;
 	char m_szVBSP2MapName[MAX_PATH];
+#endif
 
 private:
 	void BuildMap();
@@ -107,8 +111,10 @@ private:
 	// Specification for building the mission layout.
 	KeyValues *m_pMissionDefinition;
 		
+#ifdef SUPPORT_VBSP_2
 	// Handles updating asynchronous VBSP2 status
 	void UpdateVBSP2Progress();
+#endif
 
 	// Background thread for VBSP2 processing
 	CMapBuilderWorkerThread *m_pWorkerThread;
