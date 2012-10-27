@@ -2451,6 +2451,9 @@ void CASW_Marine::CheckForAIWeaponSwitch()
 	if ( pWeapon && pWeapon->IsOffensiveWeapon() && pWeapon->HasPrimaryAmmo() )
 		return;
 
+	if ( pWeapon && pWeapon->Classify() == CLASS_ASW_HEAL_GUN && GetTask() && GetTask()->iTask == TASK_ASW_HEAL_MARINE )
+		return;
+
 	// see if any of our other inventory items are valid weapons
 	for ( int i = 0; i < ASW_NUM_INVENTORY_SLOTS; i++ )
 	{
