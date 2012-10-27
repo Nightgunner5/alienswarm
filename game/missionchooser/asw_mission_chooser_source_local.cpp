@@ -1020,14 +1020,14 @@ bool CASW_Mission_Chooser_Source_Local::ASW_Campaign_CreateNewSaveGame(char *szF
 
 	// Get the current time and date as a string
 	char szDateTime[256];
-	int year, month, dayOfWeek, day, hour, minute, second;
-	ASW_System_GetCurrentTimeAndDate(&year, &month, &dayOfWeek, &day, &hour, &minute, &second);
-	Q_snprintf(szDateTime, sizeof(szDateTime), "%02d/%02d/%02d %02d:%02d", month, day, year, hour, minute);
+	struct tm timeinfo;
+	Plat_GetLocalTime( &timeinfo );
+	Q_snprintf( szDateTime, sizeof(szDateTime), "%04d-%02d-%02d %02d:%02d", timeinfo.tm_year, timeinfo.tm_mon, timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min );
 
-	if (szFileName[0] == '\0')
+	if ( !*szFileName )
 	{
 		// autogenerate a filename based on the current time and date
-		Q_snprintf(szFileName, iFileNameMaxLen, "%s_save_%02d_%02d_%02d_%02d_%02d_%02d", stripped, year, month, day, hour, minute, second);
+		Q_snprintf( szFileName, iFileNameMaxLen, "%s_save_%02d_%02d_%02d_%02d_%02d_%02d", stripped, timeinfo.tm_year, timeinfo.tm_mon, timeinfo.tm_mday, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec );
 	}
 
 	// make sure the path and extension are correct

@@ -3,46 +3,6 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include <tier0/memdbgon.h>
 
-#include <time.h>
-
-
-bool ASW_System_GetCurrentTimeAndDate(int *year, int *month, int *dayOfWeek, int *day, int *hour, int *minute, int *second)
-{
-	struct tm timeinfo;
-	Plat_GetLocalTime( &timeinfo );
-
-	if (year)
-	{
-		*year = timeinfo.tm_year;
-	}
-	if (month)
-	{
-		*month = timeinfo.tm_mon;
-	}
-	if (dayOfWeek)
-	{
-		*dayOfWeek = timeinfo.tm_wday;
-	}
-	if (day)
-	{
-		*day = timeinfo.tm_mday;
-	}
-	if (hour)
-	{
-		*hour = timeinfo.tm_hour;
-	}
-	if (minute)
-	{
-		*minute = timeinfo.tm_min;
-	}
-	if (second)
-	{
-		*second = timeinfo.tm_sec;
-	}
-	return true;
-}
-
-
 const char *Sys_FindFirst (FileFindHandle_t &searchhandle, const char *path, char *basename, int namelength )
 {
 	if (searchhandle != FILESYSTEM_INVALID_FIND_HANDLE)
