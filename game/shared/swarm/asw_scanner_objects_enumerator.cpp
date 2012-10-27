@@ -6,7 +6,6 @@
 	#include "c_asw_alien.h"
 	#include "c_asw_buzzer.h"
 	#include "c_asw_door.h"
-	#include "c_asw_grub.h"
 	#include "c_asw_computer_area.h"
 	#include "c_asw_button_area.h"
 	#define CASW_Buzzer C_ASW_Buzzer
