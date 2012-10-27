@@ -109,7 +109,7 @@ static void TakeRoomThumbnailSnapshot( CRoomThumbnail *pRoom )
 
 #define THUMBNAILS_FILE "resource/roomthumbnails.txt"
 
-CON_COMMAND( asw_buildroomthumbnails, "Outputs room thumbnail TGAs for all rooms specific in roomthumbnails.txt" )
+CON_COMMAND_F( asw_buildroomthumbnails, "Outputs room thumbnail TGAs for all rooms specific in roomthumbnails.txt", FCVAR_HIDDEN )
 {
 	// load roomthumbnails file
 	KeyValues *pKV = new KeyValues( "RoomThumbnails" );
