@@ -17,19 +17,10 @@ bool IsAlienClass( Class_T npc_class )
 		npc_class == CLASS_ASW_SHAMAN ||
 		npc_class == CLASS_ASW_BOOMER ||
 		npc_class == CLASS_ASW_RANGER ||
-		npc_class == CLASS_ASW_EGG
+		npc_class == CLASS_ASW_EGG ||
+		npc_class == CLASS_ASW_MORTARBUG
 		);
 }
-
-// 		npc_class == CLASS_ASW_ZOMBIE ||
-// 		npc_class == CLASS_ASW_HYDRA ||
-// 		npc_class == CLASS_BLOB ||
-// 		npc_class == CLASS_ASW_BOOMERMINI ||
-// 		npc_class == CLASS_ASW_MEATBUG ||
-// 		npc_class == CLASS_ASW_RUNNER ||
-// 		npc_class == CLASS_ASW_FLOCK ||
-// 		);
-//}
 
 bool IsDamagingWeaponClass( Class_T weapon_class )
 {
