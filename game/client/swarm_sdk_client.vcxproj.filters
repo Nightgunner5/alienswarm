@@ -5965,6 +5965,9 @@
     <ClInclude Include="game_controls\vguitextwindow.h">
       <Filter>game_controls Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="swarm\i_asw_player_controllable_character.h">
+      <Filter>Source Files\Swarm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\lib\public\bitmap.lib">

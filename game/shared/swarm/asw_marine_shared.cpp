@@ -416,9 +416,9 @@ CASW_Player* CASW_Marine::GetCommander() const
 	return dynamic_cast<CASW_Player*>(m_Commander.Get());
 }
 
-bool CASW_Marine::IsInhabited()
+bool CASW_Marine::IsInhabited() const
 {
-	if (!GetMarineResource())
+	if ( !GetMarineResource() )
 		return false;
 	return GetMarineResource()->IsInhabited();
 }

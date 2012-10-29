@@ -14,6 +14,7 @@
 #include "asw_info_message_shared.h"
 #include "basemultiplayerplayer.h"
 #include "steam/steam_api.h"
+#include "iasw_player_controlled_character.h"
 
 class CASW_Marine;
 class CRagdollProp;
@@ -69,7 +70,8 @@ public:
 	virtual void  HandleSpeedChanges( void );
 	virtual bool CanBeSeenBy( CAI_BaseNPC *pNPC ) { return false; } // Players are never seen by NPCs
 
-	CNetworkHandle (CASW_Marine, m_hMarine);
+	//CNetworkHandle (CASW_Marine, m_hMarine);
+	CNetworkHandle (IASW_Player_Controlled_Character, m_hControlled);
 
 	bool ShouldAutoReload() { return m_bAutoReload; }
 	bool m_bAutoReload;
@@ -90,7 +92,6 @@ public:
 	void BecomeNonSolid();
 	void OnMarineCommanded( const CASW_Marine *pMarine );
 	void SetMarine( CASW_Marine *pMarine );
-	CASW_Marine* GetMarine();
 	CASW_Marine* GetMarine() const;
 	void SelectNextMarine( bool bReverse );
 	bool CanSwitchToMarine( int num );

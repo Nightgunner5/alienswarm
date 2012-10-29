@@ -1411,6 +1411,7 @@ exit 1
     <ClInclude Include="..\..\public\vphysics\stats.h" />
     <ClInclude Include="..\..\public\steam\steam_api.h" />
     <ClInclude Include="..\..\public\stringregistry.h" />
+    <ClInclude Include="swarm\iasw_player_controlled_character.h" />
     <ClInclude Include="team.h" />
     <ClInclude Include="..\shared\teamplay_gamerules.h" />
     <ClInclude Include="..\shared\tempentity.h" />

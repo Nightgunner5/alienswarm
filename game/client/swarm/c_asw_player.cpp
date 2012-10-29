@@ -249,14 +249,14 @@ public:
 
 public:
 	CNetworkHandle( C_BasePlayer, m_hExcludePlayer );
-	CNetworkHandle( C_ASW_Marine, m_hMarine );
+	CNetworkHandle( I_ASW_Player_Controllable_Character, m_hControlled );
 	CNetworkVar( int, m_iEvent );
 };
 
 IMPLEMENT_CLIENTCLASS_EVENT( C_TEMarineAnimEvent, DT_TEMarineAnimEvent, CTEMarineAnimEvent );
 
 BEGIN_RECV_TABLE_NOBASE( C_TEMarineAnimEvent, DT_TEMarineAnimEvent )
-	RecvPropEHandle( RECVINFO( m_hMarine ) ),
+	RecvPropEHandle( RECVINFO( m_hControlled ) ),
 	RecvPropEHandle( RECVINFO( m_hExcludePlayer ) ),
 	RecvPropInt( RECVINFO( m_iEvent ) )
 END_RECV_TABLE()

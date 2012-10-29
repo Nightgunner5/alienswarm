@@ -1869,6 +1869,7 @@ exit 1
     <ClInclude Include="..\shared\postprocess_shared.h" />
     <ClInclude Include="..\shared\sharedvar.h" />
     <ClInclude Include="spatialentitymgr.h" />
+    <ClInclude Include="swarm\i_asw_player_controllable_character.h" />
     <ClInclude Include="vgui_avatarimage.h" />
     <ClInclude Include="viewdebug.h" />
     <ClInclude Include="viewpostprocess.h" />

@@ -7,6 +7,7 @@
 #include "asw_shareddefs.h"
 #include "asw_playeranimstate.h"
 #include "asw_lag_compensation.h"
+#include "iasw_player_controlled_character.h"
 
 class CASW_Player;
 class CASW_Marine_Resource;
@@ -58,7 +59,7 @@ class CBaseTrigger;
 #define ASW_MOB_VICTIM_SIZE 3
 #define ASW_MARINE_HISTORY_POSITIONS 6
 
-class CASW_Marine : public CASW_VPhysics_NPC, public IASWPlayerAnimStateHelpers
+class CASW_Marine : public CASW_VPhysics_NPC, public IASWPlayerAnimStateHelpers, public IASW_Player_Controlled_Character
 {
 public:
 	DECLARE_CLASS( CASW_Marine, CASW_VPhysics_NPC );
@@ -98,7 +99,7 @@ public:
 
 	// Camera
 	virtual const QAngle& ASWEyeAngles( void );
-	Vector EyePosition(void);
+	virtual Vector EyePosition( void ) const;
 
 	// Classification
 	Class_T		Classify( void ) { return (Class_T) CLASS_ASW_MARINE; }
@@ -117,13 +118,16 @@ public:
 	EHANDLE m_MarineResource;
 
 	// Commander/Inhabiting	
-	void SetCommander(CASW_Player *player);		// sets which player commands this marine
-	CASW_Player* GetCommander() const;
-	bool IsInhabited();
-	void SetInhabited(bool bInhabited);
-	void InhabitedBy(CASW_Player *player);		// called when a player takes direct control of this marine
-	void UninhabitedBy(CASW_Player *player);	// called when a player stops direct control of this marine	
-	CNetworkHandle (CASW_Player, m_Commander); 	// the player in charge of this marine
+	virtual void SetCommander( CASW_Player *player );
+	virtual CASW_Player* GetCommander( void ) const;
+
+	virtual bool IsInhabited( void ) const;
+	virtual void SetInhabited( bool bInhabited );
+
+	virtual void InhabitedBy( CASW_Player *player );
+	virtual void UninhabitedBy( CASW_Player *player );
+
+	CNetworkHandle ( CASW_Player, m_Commander ); 	// the player in charge of this marine
 	void SetInitialCommander(CASW_Player *player);
 	char m_szInitialCommanderNetworkID[64];		// ASWNetworkID of the first commander for this marine in this mission
 	const char *GetPlayerName() const;

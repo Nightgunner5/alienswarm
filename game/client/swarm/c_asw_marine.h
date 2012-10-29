@@ -32,7 +32,7 @@ class CASW_Melee_Attack;
 
 #define CASW_Remote_Turret C_ASW_Remote_Turret
 
-class C_ASW_Marine : public C_ASW_VPhysics_NPC, public IASWPlayerAnimStateHelpers
+class C_ASW_Marine : public C_ASW_VPhysics_NPC, public IASWPlayerAnimStateHelpers, public I_ASW_Player_Controlled_Character
 {
 public:
 	DECLARE_CLASS( C_ASW_Marine, C_ASW_VPhysics_NPC );
@@ -55,7 +55,7 @@ public:
 	virtual int DrawModel( int flags, const RenderableInstance_t &instance );
 	virtual const QAngle& ASWEyeAngles( void );	
 	virtual void BuildTransformations( CStudioHdr *pHdr, Vector *pos, Quaternion q[], const matrix3x4_t& cameraTransform, int boneMask, CBoneBitList &boneComputed );	// for left hand IK	
-	Vector EyePosition(void);
+	virtual Vector EyePosition( void ) const;
 	// custom render loc test for elevators
 	Vector m_vecCustomRenderOrigin;
 	virtual const Vector& GetRenderOrigin();
@@ -118,9 +118,9 @@ public:
 	bool GetShadowCastDirection( Vector *pDirection, ShadowType_t shadowType ) const;	
 	
 	// commander/inhabiting
-	C_ASW_Marine_Resource* GetMarineResource();
-	C_ASW_Player* GetCommander() const;
-	bool IsInhabited();
+	virtual C_ASW_Marine_Resource* GetMarineResource() const;
+	virtual C_ASW_Player* GetCommander() const;
+	virtual bool IsInhabited() const;
 	CNetworkHandle( C_ASW_Player, m_Commander );	
 	CHandle<C_ASW_Marine_Resource> m_hMarineResource;
 	CASW_Marine_Profile* GetMarineProfile();

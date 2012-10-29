@@ -211,10 +211,10 @@ void CASW_Player::DriveMarineMovement( CUserCmd *ucmd, IMoveHelper *moveHelper )
 					//ucmd->buttons |= IN_ASW_STOP;
 				}
 
-				m_hMarine->SetMoveType( MOVETYPE_WALK );
-				MarineMove()->SetupMarineMove( this, m_hMarine.Get(), ucmd, moveHelper, g_pMoveData);
-				g_pMarineGameMovement->ProcessMovement(this, m_hMarine.Get(), g_pMoveData);
-				MarineMove()->FinishMarineMove( this, m_hMarine.Get(), ucmd, g_pMoveData );
+				pMarine->SetMoveType( MOVETYPE_WALK );
+				MarineMove()->SetupMarineMove( this, pMarine, ucmd, moveHelper, g_pMoveData);
+				g_pMarineGameMovement->ProcessMovement(this, pMarine, g_pMoveData);
+				MarineMove()->FinishMarineMove( this, pMarine, ucmd, g_pMoveData );
 				moveHelper->ProcessImpacts();
 				
 				// Call this from within predicted code on both client & server
@@ -953,7 +953,7 @@ Vector CASW_Player::EarPosition( void )
 		return BaseClass::EarPosition();
 	}
 
-	CASW_Marine *pMarine = dynamic_cast<CASW_Marine*>(m_hMarine.Get());
+	CASW_Marine *pMarine = GetMarine();
 	if (pMarine)
 	{
 		return pMarine->EarPosition();

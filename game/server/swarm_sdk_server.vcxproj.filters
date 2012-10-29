@@ -4699,6 +4699,9 @@
     <ClInclude Include="toolframework_server.h">
       <Filter>Tools Framework</Filter>
     </ClInclude>
+    <ClInclude Include="swarm\iasw_player_controlled_character.h">
+      <Filter>Source Files\Swarm</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\lib\public\bonesetup.lib">

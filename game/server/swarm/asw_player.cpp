@@ -123,59 +123,55 @@ public:
 	}
 
 	CNetworkHandle( CBasePlayer, m_hExcludePlayer );
-	CNetworkHandle( CASW_Marine, m_hMarine );
+	CNetworkHandle( IASW_Player_Controlled_Character, m_hActor );
 	CNetworkVar( int, m_iEvent );
 };
 
 IMPLEMENT_SERVERCLASS_ST_NOBASE( CTEMarineAnimEvent, DT_TEMarineAnimEvent )
-	SendPropEHandle( SENDINFO( m_hMarine ) ),
+	SendPropEHandle( SENDINFO( m_hActor ) ),
 	SendPropEHandle( SENDINFO( m_hExcludePlayer ) ),
 	SendPropInt( SENDINFO( m_iEvent ), Q_log2( PLAYERANIMEVENT_COUNT ) + 1, SPROP_UNSIGNED ),
 END_SEND_TABLE()
 
 static CTEMarineAnimEvent g_TEMarineAnimEvent( "MarineAnimEvent" );
 
-void TE_MarineAnimEvent( CASW_Marine *pMarine, PlayerAnimEvent_t event )
+void TE_MarineAnimEvent( IASW_Player_Controlled_Character *pActor, PlayerAnimEvent_t event )
 {
-	CPVSFilter filter( (const Vector&) pMarine->EyePosition() );
+	CPVSFilter filter( (const Vector&) pActor->EyePosition() );
 
-	g_TEMarineAnimEvent.m_hMarine = pMarine;
+	g_TEMarineAnimEvent.m_hActor = pActor;
 	g_TEMarineAnimEvent.m_hExcludePlayer = NULL;
 	g_TEMarineAnimEvent.m_iEvent = event;
 	g_TEMarineAnimEvent.Create( filter, 0 );
 }
 
-void TE_MarineAnimEventExceptCommander( CASW_Marine *pMarine, PlayerAnimEvent_t event )
+void TE_MarineAnimEventExceptCommander( IASW_Player_Controlled_Character *pActor, PlayerAnimEvent_t event )
 {
-	if (!pMarine)
+	if ( !pActor )
 		return;
-	CPVSFilter filter( (const Vector&) pMarine->EyePosition() );
+	CPVSFilter filter( (const Vector&) pActor->EyePosition() );
 	
-	if (pMarine->GetCommander() && pMarine->IsInhabited())
-		g_TEMarineAnimEvent.m_hExcludePlayer = pMarine->GetCommander();
+	if ( pActor->GetCommander() && pActor->IsInhabited() )
+		g_TEMarineAnimEvent.m_hExcludePlayer = pActor->GetCommander();
 	else
 		g_TEMarineAnimEvent.m_hExcludePlayer = NULL;
-		//filter.RemoveRecipient(pMarine->GetCommander());
-	g_TEMarineAnimEvent.m_hMarine = pMarine;
+	g_TEMarineAnimEvent.m_hActor = pActor;
 	g_TEMarineAnimEvent.m_iEvent = event;
 	g_TEMarineAnimEvent.Create( filter, 0 );
 }
 
 // NOTE: This animevent won't get recorded in demos properly, since it's not sent to everyone!
-void TE_MarineAnimEventJustCommander( CASW_Marine *pMarine, PlayerAnimEvent_t event )
+void TE_MarineAnimEventJustCommander( IASW_Player_Controlled_Character *pActor, PlayerAnimEvent_t event )
 {	
-	if (!pMarine || !pMarine->IsInhabited())
-		return;
-	
-	if (!pMarine->GetCommander())
+	if ( !pActor || !pActor->IsInhabited() || !pActor->GetCommander() )
 		return;
 
 	CRecipientFilter filter;
 	filter.RemoveAllRecipients();
-	filter.AddRecipient(pMarine->GetCommander());
+	filter.AddRecipient( pActor->GetCommander() );
 
 	g_TEMarineAnimEvent.m_hExcludePlayer = NULL;
-	g_TEMarineAnimEvent.m_hMarine = pMarine;
+	g_TEMarineAnimEvent.m_hActor = pActor;
 	g_TEMarineAnimEvent.m_iEvent = event;
 	g_TEMarineAnimEvent.Create( filter, 0 );
 }
@@ -185,7 +181,7 @@ void TE_MarineAnimEventJustCommander( CASW_Marine *pMarine, PlayerAnimEvent_t ev
 // -------------------------------------------------------------------------------- //
 
 LINK_ENTITY_TO_CLASS( player, CASW_Player );
-PRECACHE_REGISTER(player);
+PRECACHE_REGISTER( player );
 
 IMPLEMENT_SERVERCLASS_ST( CASW_Player, DT_ASW_Player )
 	SendPropExclude( "DT_BaseAnimating", "m_flPoseParameter" ),
@@ -202,7 +198,7 @@ IMPLEMENT_SERVERCLASS_ST( CASW_Player, DT_ASW_Player )
 	SendPropAngle( SENDINFO_VECTORELEM(m_angEyeAngles, 0), 10, 0, SendProxy_AngleToFloat, SENDPROP_PLAYER_EYE_ANGLES_PRIORITY ),
 	SendPropAngle( SENDINFO_VECTORELEM(m_angEyeAngles, 1), 10, 0, SendProxy_AngleToFloat, SENDPROP_PLAYER_EYE_ANGLES_PRIORITY ),
 	SendPropAngle( SENDINFO_VECTORELEM(m_angEyeAngles, 2), 10, 0, SendProxy_AngleToFloat, SENDPROP_PLAYER_EYE_ANGLES_PRIORITY ),
-	SendPropEHandle( SENDINFO ( m_hMarine ) ),
+	SendPropEHandle( SENDINFO ( m_hControlled ) ),
 	SendPropEHandle( SENDINFO( m_hSpectatingMarine ) ),
 	SendPropEHandle( SENDINFO( m_hOrderingMarine ) ),
 	SendPropEHandle( SENDINFO ( m_pCurrentInfoMessage ) ),
@@ -223,7 +219,7 @@ END_SEND_TABLE()
 BEGIN_DATADESC( CASW_Player )
 	DEFINE_FIELD( m_fIsWalking, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_vecLastMarineOrigin, FIELD_VECTOR ),
-	DEFINE_FIELD( m_hMarine, FIELD_EHANDLE ),
+	DEFINE_FIELD( m_hControlled, FIELD_EHANDLE ),
 	DEFINE_FIELD( m_hSpectatingMarine, FIELD_EHANDLE ),
 	DEFINE_FIELD( m_vecStoredPosition, FIELD_VECTOR ),	
 	DEFINE_FIELD( m_pCurrentInfoMessage, FIELD_EHANDLE ),	
@@ -321,7 +317,7 @@ CASW_Player::CASW_Player()
 
 	SetViewOffset( ASW_PLAYER_VIEW_OFFSET );
 
-	m_hMarine = NULL;
+	m_hControlled = NULL;
 	m_pCurrentInfoMessage = NULL;
 	m_vecLastMarineOrigin = vec3_origin;
 
@@ -1788,20 +1784,15 @@ void CASW_Player::SetMarine( CASW_Marine *pMarine )
 			gameeventmanager->FireEvent( event );
 		}
 
-		m_hMarine = pMarine;
+		m_hControlled = pMarine;
 		// make sure our list of usable entities is refreshed
 		FindUseEntities();
 	}
 }
 
-CASW_Marine* CASW_Player::GetMarine()
-{
-	return m_hMarine.Get();
-}
-
 CASW_Marine* CASW_Player::GetMarine() const
 {
-	return m_hMarine.Get();
+	return dynamic_cast<CASW_Marine*>( m_hControlled.Get() );
 }
 
 void CASW_Player::SpectateNextMarine()
@@ -2151,11 +2142,11 @@ void CASW_Player::OrderMarineFace(int iMarine, float fYaw, Vector &vecOrderPos)
 //   player entity as normal (this is just for debugging)
 void CASW_Player::LeaveMarines()
 {
-	if (GetMarine())
+	if ( GetMarine() )
 	{
 		GetMarine()->UninhabitedBy(this);
 	}
-	m_hMarine = NULL;	
+	m_hControlled = NULL;	
 }
 
 void CASW_Player::ChangeName( const char *pszNewName )
