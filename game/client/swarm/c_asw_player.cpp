@@ -240,7 +240,7 @@ public:
 		if (C_BasePlayer::IsLocalPlayer( m_hExcludePlayer.Get() ))	// !engine->IsPlayingDemo() && 
 			return;
 		// play anim event
-		C_ASW_Marine *pMarine = dynamic_cast< C_ASW_Marine* >( m_hControlled.Get() );
+		C_ASW_Marine *pMarine = dynamic_cast< C_ASW_Marine* >( m_hActor.Get() );
 		if ( pMarine && !pMarine->IsDormant() )
 		{
 			pMarine->DoAnimationEvent( (PlayerAnimEvent_t)m_iEvent.Get() );
@@ -249,14 +249,14 @@ public:
 
 public:
 	CNetworkHandle( C_BasePlayer, m_hExcludePlayer );
-	CNetworkHandle( C_BaseEntity, m_hControlled );
+	CNetworkHandle( C_BaseEntity, m_hActor );
 	CNetworkVar( int, m_iEvent );
 };
 
 IMPLEMENT_CLIENTCLASS_EVENT( C_TEMarineAnimEvent, DT_TEMarineAnimEvent, CTEMarineAnimEvent );
 
 BEGIN_RECV_TABLE_NOBASE( C_TEMarineAnimEvent, DT_TEMarineAnimEvent )
-	RecvPropEHandle( RECVINFO( m_hControlled ) ),
+	RecvPropEHandle( RECVINFO( m_hActor ) ),
 	RecvPropEHandle( RECVINFO( m_hExcludePlayer ) ),
 	RecvPropInt( RECVINFO( m_iEvent ) )
 END_RECV_TABLE()
