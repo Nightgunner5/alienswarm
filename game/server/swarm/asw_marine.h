@@ -70,7 +70,6 @@ public:
 	CASW_Marine();
 	virtual ~CASW_Marine();
 
-	// Use this in preference to CASW_Marine::AsMarine( pEnt ) :
 	static inline CASW_Marine *AsMarine( CBaseEntity *pEnt );
 
 	virtual void Precache();
@@ -99,7 +98,7 @@ public:
 
 	// Camera
 	virtual const QAngle& ASWEyeAngles( void );
-	virtual Vector EyePosition( void ) const;
+	virtual Vector EyePosition( void );
 
 	// Classification
 	Class_T		Classify( void ) { return (Class_T) CLASS_ASW_MARINE; }

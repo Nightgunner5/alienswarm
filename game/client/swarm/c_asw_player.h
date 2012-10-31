@@ -28,6 +28,7 @@ class C_ASW_Voting_Missions;
 class C_ASW_Marine_Resource;
 class C_EnvAmbientLight;
 class CASW_Map_Builder;
+class I_ASW_Player_Controlled_Character;
 
 class C_ASW_Player : public C_BasePlayer, public IASWPlayerAnimStateHelpers
 {
@@ -136,7 +137,7 @@ public:
 	virtual const QAngle& EyeAnglesWithCursorRoll();
 	QAngle	m_angEyeAngles;
 	CInterpolatedVar< QAngle >	m_iv_angEyeAngles;
-	CNetworkHandle( C_ASW_Marine, m_hMarine );    // our currently controlled marine
+	CNetworkHandle( C_BaseEntity, m_hControlled );    // our currently controlled character
 	CNetworkHandle( C_ASW_Marine, m_hSpectatingMarine );    // the marine we're spectating when dead
 	const Vector& GetCrosshairTracePos() { return m_vecCrosshairTracePos; }
 	void SetCrosshairTracePos( const Vector &vecPos ) { m_vecCrosshairTracePos = vecPos; }
@@ -144,7 +145,9 @@ public:
 
 	bool IsSniperScopeActive();
 
-	C_ASW_Marine* GetMarine();
+	I_ASW_Player_Controlled_Character* GetCharacter() const;
+	C_BaseEntity* GetCharacterEntity() const;
+
 	C_ASW_Marine* GetMarine() const;
 	C_ASW_Marine* GetSpectatingMarine();
 	bool HasLiveMarines();

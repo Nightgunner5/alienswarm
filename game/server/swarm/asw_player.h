@@ -71,7 +71,7 @@ public:
 	virtual bool CanBeSeenBy( CAI_BaseNPC *pNPC ) { return false; } // Players are never seen by NPCs
 
 	//CNetworkHandle (CASW_Marine, m_hMarine);
-	CNetworkHandle (IASW_Player_Controlled_Character, m_hControlled);
+	CNetworkHandle (CBaseEntity, m_hControlled);
 
 	bool ShouldAutoReload() { return m_bAutoReload; }
 	bool m_bAutoReload;
@@ -91,8 +91,13 @@ public:
 
 	void BecomeNonSolid();
 	void OnMarineCommanded( const CASW_Marine *pMarine );
+
 	void SetMarine( CASW_Marine *pMarine );
 	CASW_Marine* GetMarine() const;
+	void SetCharacter( IASW_Player_Controlled_Character *pEntity );
+	IASW_Player_Controlled_Character* GetCharacter() const;
+	CBaseEntity* GetCharacterEntity() const;
+
 	void SelectNextMarine( bool bReverse );
 	bool CanSwitchToMarine( int num );
 	void SwitchMarine( int num );
@@ -253,9 +258,9 @@ private:
 	bool m_bFirstInhabit;
 };
 
-extern void TE_MarineAnimEvent( CASW_Marine *pMarine, PlayerAnimEvent_t event );
-extern void TE_MarineAnimEventExceptCommander( CASW_Marine *pMarine, PlayerAnimEvent_t event );
-extern void TE_MarineAnimEventJustCommander( CASW_Marine *pMarine, PlayerAnimEvent_t event );
+extern void TE_MarineAnimEvent( CBaseEntity *pActor, PlayerAnimEvent_t event );
+extern void TE_MarineAnimEventExceptCommander( CBaseEntity *pActor, PlayerAnimEvent_t event );
+extern void TE_MarineAnimEventJustCommander( CBaseEntity *pActor, PlayerAnimEvent_t event );
 
 void OrderNearbyMarines(CASW_Player *pPlayer, ASW_Orders NewOrders, bool bAcknowledge = true );
 

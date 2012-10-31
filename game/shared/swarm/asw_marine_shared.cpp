@@ -207,7 +207,7 @@ bool CASW_Marine::TickEmote(float d, bool bEmote, bool& bClientEmote, float& fEm
 }
 
 // asw fixme to be + eye height (crouch/no)
-Vector CASW_Marine::EyePosition( void ) 
+Vector CASW_Marine::EyePosition( void )
 {
 	// if we're driving, return the position of our vehicle
 	if (IsInVehicle())

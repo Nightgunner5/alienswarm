@@ -713,9 +713,9 @@ const QAngle& C_ASW_Marine::GetRenderAngles()
 	//}
 }
 
-C_ASW_Marine_Resource* C_ASW_Marine::GetMarineResource() 
-{	
-	if (m_hMarineResource.Get() != NULL)
+C_ASW_Marine_Resource* C_ASW_Marine::GetMarineResource() const
+{
+	if ( m_hMarineResource.Get() != NULL )
 		return m_hMarineResource.Get();
 
 	// find our marine info
@@ -727,7 +727,8 @@ C_ASW_Marine_Resource* C_ASW_Marine::GetMarineResource()
 			C_ASW_Marine_Resource* pMR = pGameResource->GetMarineResource(i);
 			if (pMR != NULL && pMR->GetMarineEntity() == this)
 			{
-				m_hMarineResource = pMR;
+				// It means we have to re-compute the entity every time, but at least it's const now and free(er) of headaches.
+				// m_hMarineResource = pMR;
 				return pMR;
 			}
 		}

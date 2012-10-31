@@ -38,6 +38,7 @@
 	#define CASW_Sentry_Base C_ASW_Sentry_Base
 	#define CASW_Weapon C_ASW_Weapon
 	#define CASW_Hack C_ASW_Hack
+	#define IASW_Player_Controlled_Character I_ASW_Player_Controlled_Character
 #else
 	#include "player.h"
 	#include "asw_player.h"
@@ -869,21 +870,6 @@ const QAngle& CASW_Player::EyeAngles( )
 		return BaseClass::EyeAngles();
 	}
 
-	static QAngle angAdjustedEyes;
-
-#ifdef CLIENT_DLL
-	if ( IsLocalPlayer ( this ) )
-	{
-		angAdjustedEyes = BaseClass::EyeAngles();
-	}
-	else
-	{
-		angAdjustedEyes = m_angEyeAngles;
-	}
-#else
-	angAdjustedEyes = BaseClass::EyeAngles();
-#endif
-
 #ifdef CLIENT_DLL
 	if ( asw_allow_detach.GetBool() && GetMarine() )
 	{
@@ -891,42 +877,24 @@ const QAngle& CASW_Player::EyeAngles( )
 	}
 #endif
 
-	if (GetMarine())
+	CBaseEntity *pCharacter = GetCharacterEntity();
+	if ( pCharacter && !dynamic_cast<CASW_Marine*>( pCharacter ) )
 	{
-		angAdjustedEyes.z = 0;
-		CASW_Marine* pMarine = GetMarine();
-
-		// if we're driving, return the angle
-		if (pMarine->IsInVehicle())
-		{
-	#ifdef CLIENT_DLL
-			if (pMarine->GetClientsideVehicle() && pMarine->GetClientsideVehicle()->GetEntity())
-				return pMarine->GetClientsideVehicle()->GetEntity()->GetAbsAngles();
-	#endif
-			if (pMarine->GetASWVehicle() && pMarine->GetASWVehicle()->GetEntity())
-				return pMarine->GetASWVehicle()->GetEntity()->GetAbsAngles();
-		}
+		return pCharacter->EyeAngles();
 	}
 
-	return angAdjustedEyes;
+#ifdef CLIENT_DLL
+	if ( !IsLocalPlayer( this ) )
+	{
+		return m_angEyeAngles;
+	}
+#endif
+	return BaseClass::EyeAngles();
 }
 
 const QAngle& CASW_Player::EyeAnglesWithCursorRoll( )
 {
-	static QAngle angCursorEyes;
-#ifdef CLIENT_DLL
-	if ( IsLocalPlayer ( this ) )
-	{
-		angCursorEyes = BaseClass::EyeAngles();
-	}
-	else
-	{
-		angCursorEyes = m_angEyeAngles;
-	}	
-#else
-	angCursorEyes = BaseClass::EyeAngles();
-#endif
-	return angCursorEyes;
+	return EyeAngles();
 }
 
 void CASW_Player::AvoidPhysicsProps(CUserCmd *pCmd)
@@ -1160,10 +1128,10 @@ void CASW_Player::HandleSpeedChanges( void )
 
 CBaseEntity* CASW_Player::GetSoundscapeListener()
 {
-	if (GetMarine())
-		return GetMarine();
+	if ( GetCharacterEntity() )
+		return GetCharacterEntity();
 
-	if (GetSpectatingMarine())
+	if ( GetSpectatingMarine() )
 		return GetSpectatingMarine();
 
 	return this;

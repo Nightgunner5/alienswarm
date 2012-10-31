@@ -1,11 +1,11 @@
 #ifndef _IASW_PLAYER_CONTROLLED_CHARACTER_H
 #define _IASW_PLAYER_CONTROLLED_CHARACTER_H
 
+class CASW_Player;
+
 abstract_class IASW_Player_Controlled_Character
 {
 public:
-	virtual Vector EyePosition( void ) const = 0;
-
 	// Commander/Inhabiting	
 	virtual void SetCommander( CASW_Player *player ) = 0;
 	virtual CASW_Player* GetCommander( void ) const = 0;

@@ -240,7 +240,7 @@ public:
 		if (C_BasePlayer::IsLocalPlayer( m_hExcludePlayer.Get() ))	// !engine->IsPlayingDemo() && 
 			return;
 		// play anim event
-		C_ASW_Marine *pMarine = dynamic_cast< C_ASW_Marine* >( m_hMarine.Get() );
+		C_ASW_Marine *pMarine = dynamic_cast< C_ASW_Marine* >( m_hControlled.Get() );
 		if ( pMarine && !pMarine->IsDormant() )
 		{
 			pMarine->DoAnimationEvent( (PlayerAnimEvent_t)m_iEvent.Get() );
@@ -249,7 +249,7 @@ public:
 
 public:
 	CNetworkHandle( C_BasePlayer, m_hExcludePlayer );
-	CNetworkHandle( I_ASW_Player_Controllable_Character, m_hControlled );
+	CNetworkHandle( C_BaseEntity, m_hControlled );
 	CNetworkVar( int, m_iEvent );
 };
 
@@ -269,7 +269,7 @@ BEGIN_NETWORK_TABLE( C_ASW_Player, DT_ASW_Player )
 	RecvPropFloat( RECVINFO( m_angEyeAngles[0] ) ),
 	RecvPropFloat( RECVINFO( m_angEyeAngles[1] ) ),
 	RecvPropFloat( RECVINFO( m_angEyeAngles[2] ) ),
-	RecvPropEHandle( RECVINFO( m_hMarine ) ),
+	RecvPropEHandle( RECVINFO( m_hControlled ) ),
 	RecvPropEHandle( RECVINFO( m_hSpectatingMarine ) ),
 	RecvPropInt		(RECVINFO(m_iHealth)),
 	RecvPropEHandle( RECVINFO ( m_pCurrentInfoMessage ) ),
@@ -748,7 +748,7 @@ void C_ASW_Player::CampaignLaunchMission(int iTargetMission)
 
 bool C_ASW_Player::ShouldDraw()			// we don't draw the player at all (only the npc's that he's remote controlling)
 {
-	if (m_hMarine.Get()!=NULL)
+	if ( GetCharacterEntity() )
 		return false;
 
 	return (g_DrawPlayer.GetBool());
@@ -914,16 +914,19 @@ void C_ASW_Player::CloseBriefingFrame()
 	}
 }
 
-
-
-C_ASW_Marine* C_ASW_Player::GetMarine()
+I_ASW_Player_Controlled_Character* C_ASW_Player::GetCharacter() const
 {
-	return m_hMarine.Get();
+	return dynamic_cast<I_ASW_Player_Controlled_Character*>( GetCharacterEntity() );
+}
+
+C_BaseEntity* C_ASW_Player::GetCharacterEntity() const
+{
+	return m_hControlled.Get();
 }
 
 C_ASW_Marine* C_ASW_Player::GetMarine() const
 {
-	return m_hMarine.Get();
+	return C_ASW_Marine::AsMarine( GetCharacterEntity() );
 }
 
 C_ASW_Marine* C_ASW_Player::GetSpectatingMarine()

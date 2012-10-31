@@ -11,6 +11,7 @@
 #include "asw_playeranimstate.h"
 #include "beamdraw.h"
 #include "object_motion_blur_effect.h"
+#include "i_asw_player_controllable_character.h"
 
 class C_ASW_Player;
 class C_ASW_Marine_Resource;
@@ -55,7 +56,7 @@ public:
 	virtual int DrawModel( int flags, const RenderableInstance_t &instance );
 	virtual const QAngle& ASWEyeAngles( void );	
 	virtual void BuildTransformations( CStudioHdr *pHdr, Vector *pos, Quaternion q[], const matrix3x4_t& cameraTransform, int boneMask, CBoneBitList &boneComputed );	// for left hand IK	
-	virtual Vector EyePosition( void ) const;
+	virtual Vector EyePosition( void );
 	// custom render loc test for elevators
 	Vector m_vecCustomRenderOrigin;
 	virtual const Vector& GetRenderOrigin();

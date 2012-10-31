@@ -123,7 +123,7 @@ public:
 	}
 
 	CNetworkHandle( CBasePlayer, m_hExcludePlayer );
-	CNetworkHandle( IASW_Player_Controlled_Character, m_hActor );
+	CNetworkHandle( CBaseEntity, m_hActor );
 	CNetworkVar( int, m_iEvent );
 };
 
@@ -135,7 +135,7 @@ END_SEND_TABLE()
 
 static CTEMarineAnimEvent g_TEMarineAnimEvent( "MarineAnimEvent" );
 
-void TE_MarineAnimEvent( IASW_Player_Controlled_Character *pActor, PlayerAnimEvent_t event )
+void TE_MarineAnimEvent( CBaseEntity *pActor, PlayerAnimEvent_t event )
 {
 	CPVSFilter filter( (const Vector&) pActor->EyePosition() );
 
@@ -145,14 +145,15 @@ void TE_MarineAnimEvent( IASW_Player_Controlled_Character *pActor, PlayerAnimEve
 	g_TEMarineAnimEvent.Create( filter, 0 );
 }
 
-void TE_MarineAnimEventExceptCommander( IASW_Player_Controlled_Character *pActor, PlayerAnimEvent_t event )
+void TE_MarineAnimEventExceptCommander( CBaseEntity *pActor, PlayerAnimEvent_t event )
 {
 	if ( !pActor )
 		return;
 	CPVSFilter filter( (const Vector&) pActor->EyePosition() );
 	
-	if ( pActor->GetCommander() && pActor->IsInhabited() )
-		g_TEMarineAnimEvent.m_hExcludePlayer = pActor->GetCommander();
+	IASW_Player_Controlled_Character *pCharacter = dynamic_cast<IASW_Player_Controlled_Character*>( pActor );
+	if ( pCharacter && pCharacter->GetCommander() && pCharacter->IsInhabited() )
+		g_TEMarineAnimEvent.m_hExcludePlayer = pCharacter->GetCommander();
 	else
 		g_TEMarineAnimEvent.m_hExcludePlayer = NULL;
 	g_TEMarineAnimEvent.m_hActor = pActor;
@@ -161,14 +162,15 @@ void TE_MarineAnimEventExceptCommander( IASW_Player_Controlled_Character *pActor
 }
 
 // NOTE: This animevent won't get recorded in demos properly, since it's not sent to everyone!
-void TE_MarineAnimEventJustCommander( IASW_Player_Controlled_Character *pActor, PlayerAnimEvent_t event )
+void TE_MarineAnimEventJustCommander( CBaseEntity *pActor, PlayerAnimEvent_t event )
 {	
-	if ( !pActor || !pActor->IsInhabited() || !pActor->GetCommander() )
+	IASW_Player_Controlled_Character *pCharacter = dynamic_cast<IASW_Player_Controlled_Character*>( pActor );
+	if ( !pCharacter || !pCharacter->IsInhabited() || !pCharacter->GetCommander() )
 		return;
 
 	CRecipientFilter filter;
 	filter.RemoveAllRecipients();
-	filter.AddRecipient( pActor->GetCommander() );
+	filter.AddRecipient( pCharacter->GetCommander() );
 
 	g_TEMarineAnimEvent.m_hExcludePlayer = NULL;
 	g_TEMarineAnimEvent.m_hActor = pActor;
@@ -389,10 +391,12 @@ void CASW_Player::PostThink()
 {
 	BaseClass::PostThink();
 
-	QAngle angles = GetLocalAngles();
-	if (GetMarine())
+	if ( GetCharacter() )
+	{
+		QAngle angles = GetLocalAngles();
 		angles[PITCH] = 0;
-	SetLocalAngles( angles );
+		SetLocalAngles( angles );
+	}
 	
 	// Store the eye angles pitch so the client can compute its animation state correctly.
 	m_angEyeAngles = EyeAngles();
@@ -1790,9 +1794,36 @@ void CASW_Player::SetMarine( CASW_Marine *pMarine )
 	}
 }
 
-CASW_Marine* CASW_Player::GetMarine() const
+CASW_Marine* CASW_Player::GetMarine( void ) const
 {
-	return dynamic_cast<CASW_Marine*>( m_hControlled.Get() );
+	return CASW_Marine::AsMarine( GetCharacterEntity() );
+}
+
+void CASW_Player::SetCharacter( IASW_Player_Controlled_Character *pCharacter )
+{
+	CBaseEntity *pEntity = dynamic_cast<CBaseEntity*>( pCharacter );
+	if ( !pEntity )
+		return;
+
+	CASW_Marine *pMarine = CASW_Marine::AsMarine( pEntity );
+	if ( pMarine )
+	{
+		SetMarine( pMarine );
+		return;
+	}
+
+	// TODO: More logic here?
+	m_hControlled = pEntity;
+}
+
+IASW_Player_Controlled_Character* CASW_Player::GetCharacter( void ) const
+{
+	return dynamic_cast<IASW_Player_Controlled_Character*>( GetCharacterEntity() );
+}
+
+CBaseEntity* CASW_Player::GetCharacterEntity( void ) const
+{
+	return m_hControlled.Get();
 }
 
 void CASW_Player::SpectateNextMarine()
@@ -2539,7 +2570,7 @@ void OrderNearbyMarines(CASW_Player *pPlayer, ASW_Orders NewOrders, bool bAcknow
 		return;
 
 	CASW_Marine *pMyMarine = pPlayer->GetMarine();
-	if ( pPlayer && pMyMarine )
+	if ( pMyMarine )
 	{
 		if ( pMyMarine->GetFlags() & FL_FROZEN )	// don't allow this if the marine is frozen
 			return;
